@@ -19,7 +19,7 @@ RPC_URL = 'https://sepolia-rpc.kakarot.org'
 CHAIN_ID = 1802203764
 
 def generate_random_address():
-    return Web3.toChecksumAddress(Web3.keccak(os.urandom(20))[:20].hex())
+    return Web3.to_checksum_address(Web3.keccak(os.urandom(20))[:20].hex())
 
 def display_header():
     header = r"""
@@ -31,6 +31,13 @@ def display_header():
     twitter_link = "\033[92mhttps://x.com/0xOneiros\033[0m"
     print(header)
     print(twitter_link)
+
+def get_valid_input(prompt_text, input_type=int):
+    while True:
+        try:
+            return input_type(prompt(prompt_text))
+        except ValueError:
+            print(f"Please enter a valid {input_type.__name__}")
 
 def main():
     display_header()
@@ -51,8 +58,8 @@ def main():
         print('No wallets found')
         return
 
-    amount_to_send = prompt('How much ETH do you want to send (in ETH): ')
-    num_addresses = int(prompt('How many addresses do you want to send to: '))
+    amount_to_send = get_valid_input('How much ETH do you want to send (in ETH): ', float)
+    num_addresses = get_valid_input('How many addresses do you want to send to: ', int)
 
     amount_in_wei = Web3.to_wei(amount_to_send, 'ether')
     gas_price = provider.eth.gas_price
@@ -75,7 +82,7 @@ def main():
                 'value': amount_in_wei,
                 'gas': 21000,
                 'gasPrice': gas_price,
-                'nonce': provider.eth.getTransactionCount(wallet.address),
+                'nonce': provider.eth.get_transaction_count(wallet.address),
                 'chainId': CHAIN_ID
             }
 
