@@ -88,7 +88,7 @@ def main():
 
             try:
                 signed_tx = wallet.sign_transaction(tx)
-                tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
+                tx_hash = provider.eth.send_raw_transaction(signed_tx.raw_transaction)
                 print(f'Sent {amount_to_send} ETH from {wallet.address} to {random_address}')
                 print(f'Tx Hash: {tx_hash.hex()}')
             except Exception as e:
